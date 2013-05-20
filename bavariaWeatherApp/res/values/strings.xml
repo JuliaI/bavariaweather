@@ -1,5 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Bayern Wetter</string>
+    <string name="app_name">Bayernwetter</string>
+    <string name="title_activity_show_weather">Wetter in Bayern</string>
+    <string name="menu_item_refresh">Neu laden</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
