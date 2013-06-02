@@ -47,6 +47,13 @@ public class DownloadWeatherDataAsyncTask extends
 
 	private final Region region;
 
+	/**
+	 * constructor
+	 * 
+	 * @param activity
+	 * @param sharedPrefs
+	 * @param region
+	 */
 	public DownloadWeatherDataAsyncTask(final Activity activity,
 			final SharedPreferences sharedPrefs, final Region region) {
 		this.thisActivity = activity;
@@ -75,6 +82,7 @@ public class DownloadWeatherDataAsyncTask extends
 		final URL url;
 		try {
 			url = new URL(region.getUrl());
+
 		} catch (MalformedURLException e) {
 			Log.e(this.getClass().getName(),
 					"MalformedURLException happened while creating the url! Message: "
@@ -117,13 +125,8 @@ public class DownloadWeatherDataAsyncTask extends
 	@Override
 	protected void onPostExecute(AsyncTaskResult result) {
 		// the html-data
-		String htmlData = result.getData();
+		final String htmlData = result.getData();
 		if (htmlData != null && htmlData.length() > 0) {
-			// fix html for WebView
-			htmlData = htmlData.replaceAll("ä", "&auml;");
-			htmlData = htmlData.replaceAll("ö", "&ouml;");
-			htmlData = htmlData.replaceAll("ü", "&uuml;");
-			htmlData = htmlData.replaceAll("ß", "&szlig;");
 
 			final Editor prefsEditor = sharedPrefs.edit();
 			prefsEditor.putString(region.getPreferencesKey(), htmlData);
@@ -132,11 +135,12 @@ public class DownloadWeatherDataAsyncTask extends
 			region.setWeatherData(htmlData);
 
 		} else {
+			// if no new data could be retrieved: show at least old data
 			region.setWeatherData(sharedPrefs.getString(
 					region.getPreferencesKey(), ""));
 		}
 
-		// the error-message
+		// show the error-message in toast
 		final String errorMessage = result.getErrorMessage();
 		if (errorMessage != null && errorMessage.length() > 0) {
 			Toast.makeText(thisActivity,
@@ -147,6 +151,7 @@ public class DownloadWeatherDataAsyncTask extends
 
 	/**
 	 * @param source
+	 * @param result
 	 * @return
 	 */
 	private AsyncTaskResult extractWeather(String source,
@@ -156,7 +161,7 @@ public class DownloadWeatherDataAsyncTask extends
 			return result;
 		}
 
-		// fix malformed html
+		// fix malformed html so that it can be parsed
 		source = source.replaceAll("</</div>", "</p></div>");
 		source = source.replaceAll("&uuml;", "ü");
 		source = source.replaceAll("&auml;", "ä");
@@ -170,7 +175,12 @@ public class DownloadWeatherDataAsyncTask extends
 
 			final WeatherData weatherData = handler.getData();
 
-			final String html = buildHtml(weatherData);
+			String html = buildHtml(weatherData);
+			// fix html for WebView
+			html = html.replaceAll("ä", "&auml;");
+			html = html.replaceAll("ö", "&ouml;");
+			html = html.replaceAll("ü", "&uuml;");
+			html = html.replaceAll("ß", "&szlig;");
 
 			result.setData(html);
 			return result;
@@ -181,6 +191,7 @@ public class DownloadWeatherDataAsyncTask extends
 							+ e.getMessage());
 			result.setErrorMessage("ParserConfigurationException");
 			return result;
+
 		} catch (SAXException e) {
 			final String exceptionMsg = e.getMessage();
 
@@ -215,6 +226,7 @@ public class DownloadWeatherDataAsyncTask extends
 			result.setErrorMessage("Probleme beim Parsen. Versuch es in ein paar Minuten noch einmal. \n("
 					+ exceptionMsg + ")");
 			return result;
+
 		} catch (IOException e) {
 			Log.e(this.getClass().getName(),
 					"IOException happened during parsing! Message: "
@@ -256,9 +268,12 @@ public class DownloadWeatherDataAsyncTask extends
 		for (final WeatherText text : weatherData.getWeatherTexts()) {
 			sb.append("<div class=\"weatherText\">");
 
-			sb.append("<h3>");
-			sb.append(text.getHead());
-			sb.append("</h3>");
+			final String head = text.getHead();
+			if (head != null && head.length() > 0) {
+				sb.append("<h3>");
+				sb.append(head);
+				sb.append("</h3>");
+			}
 
 			sb.append("<p>");
 			sb.append(text.getText());
@@ -329,15 +344,18 @@ public class DownloadWeatherDataAsyncTask extends
 						&& classAttrValue.equals("br-wetter")) {
 					foundH1BrWetter = true;
 				}
+
 			} else if (qName.equalsIgnoreCase("p")) {
 				if (classAttrValue != null
 						&& classAttrValue.equals("vorhersage")) {
 					foundPVorhersage = true;
 				}
+
 				if (classAttrValue == null && foundDivTimeStamp) {
 					foundDivTimeStampP = true;
 					foundDivTimeStamp = false;
 				}
+
 			} else if (qName.equalsIgnoreCase("div")) {
 				if (classAttrValue != null) {
 					if (classAttrValue.equals("Schlagzeile")) {
@@ -348,6 +366,7 @@ public class DownloadWeatherDataAsyncTask extends
 						foundDivWetterTextBlock = true;
 					}
 				}
+
 			} else if (qName.equalsIgnoreCase("span")) {
 				if (classAttrValue != null) {
 					if (classAttrValue.equals("uhrzeit")) {

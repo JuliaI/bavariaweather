@@ -2,6 +2,10 @@ package de.juliai.bavariaweather;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.webkit.WebView;
 
 /**
@@ -25,10 +29,12 @@ public class Region {
 	 * @param url
 	 * @param preferencesKey
 	 * @param sharedPrefs
+	 * @param gestureDetector
 	 * @param thisActivity
 	 */
 	public Region(final String url, final String preferencesKey,
-			final SharedPreferences sharedPrefs, final Activity thisActivity) {
+			final SharedPreferences sharedPrefs,
+			final GestureDetector gestureDetector, final Activity thisActivity) {
 		this.url = url;
 		this.preferencesKey = preferencesKey;
 
@@ -36,6 +42,14 @@ public class Region {
 
 		final WebView regionsView = new WebView(thisActivity);
 		regionsView.loadData(weatherData, "text/html", "UTF8");
+
+		regionsView.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				return gestureDetector.onTouchEvent(motionEvent);
+			}
+		});
+
 		this.view = regionsView;
 	}
 
@@ -59,12 +73,17 @@ public class Region {
 		return weatherData;
 	}
 
+	/**
+	 * sets the new weather-data and updates the view
+	 * 
+	 * @param weatherData
+	 */
 	public void setWeatherData(String weatherData) {
-		this.weatherData = weatherData;
-
 		if (weatherData == null) {
 			weatherData = "";
 		}
+
+		this.weatherData = weatherData;
 		this.view.loadData(weatherData, "text/html", "UTF8");
 	}
 

@@ -2,9 +2,7 @@ package de.juliai.bavariaweather;
 
 import java.util.List;
 
-import android.content.SharedPreferences;
 import android.database.DataSetObserver;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
@@ -21,11 +19,9 @@ public class RegionsAdapter implements Adapter {
 	/**
 	 * constructor
 	 * 
-	 * @param activity
-	 * @param sharedPrefs
+	 * @param regions
 	 */
-	public RegionsAdapter(final SharedPreferences sharedPrefs,
-			final List<Region> regions) {
+	public RegionsAdapter(final List<Region> regions) {
 		this.regions = regions;
 	}
 
@@ -34,9 +30,6 @@ public class RegionsAdapter implements Adapter {
 	 */
 	@Override
 	public Object getItem(int position) {
-		Log.i(this.getClass().getName(), "getItem called for position "
-				+ position);
-
 		if (position < 0 || position >= regions.size()) {
 			position = 0;
 		}
@@ -57,9 +50,6 @@ public class RegionsAdapter implements Adapter {
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Log.i(this.getClass().getName(), "getView called for position "
-				+ position);
-
 		if (position < 0 || position >= regions.size()) {
 			position = 0;
 		}
