@@ -1,13 +1,5 @@
 package de.juliai.bavariaweather;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
-import android.webkit.WebView;
-
 /**
  * 
  * @author JuliaI
@@ -19,38 +11,17 @@ public class Region {
 
 	private String preferencesKey;
 
-	private String weatherData;
+	private RegionFragment fragment;
 
-	private WebView view;
-
-	/**
-	 * constructor
-	 * 
-	 * @param url
-	 * @param preferencesKey
-	 * @param sharedPrefs
-	 * @param gestureDetector
-	 * @param thisActivity
-	 */
 	public Region(final String url, final String preferencesKey,
-			final SharedPreferences sharedPrefs,
-			final GestureDetector gestureDetector, final Activity thisActivity) {
+			final RegionFragment fragment) {
 		this.url = url;
 		this.preferencesKey = preferencesKey;
+		this.fragment = fragment;
+	}
 
-		this.weatherData = sharedPrefs.getString(preferencesKey, "");
-
-		final WebView regionsView = new WebView(thisActivity);
-		regionsView.loadData(weatherData, "text/html", "UTF8");
-
-		regionsView.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-				return gestureDetector.onTouchEvent(motionEvent);
-			}
-		});
-
-		this.view = regionsView;
+	public void changeWeatherData(final String newWeatherData) {
+		this.fragment.changeWeatherData(newWeatherData);
 	}
 
 	public String getUrl() {
@@ -69,29 +40,11 @@ public class Region {
 		this.preferencesKey = preferencesKey;
 	}
 
-	public String getWeatherData() {
-		return weatherData;
+	public RegionFragment getFragment() {
+		return fragment;
 	}
 
-	/**
-	 * sets the new weather-data and updates the view
-	 * 
-	 * @param weatherData
-	 */
-	public void setWeatherData(String weatherData) {
-		if (weatherData == null) {
-			weatherData = "";
-		}
-
-		this.weatherData = weatherData;
-		this.view.loadData(weatherData, "text/html", "UTF8");
-	}
-
-	public WebView getView() {
-		return view;
-	}
-
-	public void setView(WebView view) {
-		this.view = view;
+	public void setFragment(RegionFragment fragment) {
+		this.fragment = fragment;
 	}
 }

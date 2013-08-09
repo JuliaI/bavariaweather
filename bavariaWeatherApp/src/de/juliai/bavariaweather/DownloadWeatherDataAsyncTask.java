@@ -67,7 +67,7 @@ public class DownloadWeatherDataAsyncTask extends
 	 */
 	@Override
 	protected void onPreExecute() {
-		region.setWeatherData("Wetterdaten werden geladen...");
+		region.changeWeatherData("Wetterdaten werden geladen...");
 	}
 
 	/**
@@ -132,11 +132,11 @@ public class DownloadWeatherDataAsyncTask extends
 			prefsEditor.putString(region.getPreferencesKey(), htmlData);
 			prefsEditor.commit();
 
-			region.setWeatherData(htmlData);
+			region.changeWeatherData(htmlData);
 
 		} else {
 			// if no new data could be retrieved: show at least old data
-			region.setWeatherData(sharedPrefs.getString(
+			region.changeWeatherData(sharedPrefs.getString(
 					region.getPreferencesKey(), ""));
 		}
 
@@ -162,9 +162,13 @@ public class DownloadWeatherDataAsyncTask extends
 		}
 
 		// fix malformed html so that it can be parsed
-		source = source.replaceAll("</</div>", "</p></div>");
-		source = source.replaceAll("&uuml;", "ü");
-		source = source.replaceAll("&auml;", "ä");
+		source = source.replace("</</div>", "</p></div>");
+		source = source.replace("&uuml;", "ü");
+		source = source.replace("&auml;", "ä");
+
+		// TODO fix for this
+		// source = source.replaceAll("mehr Verkehr</a></p>.+</div></div>",
+		// "mehr Verkehr</a></p></div></div>");
 
 		try {
 			final SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -260,21 +264,23 @@ public class DownloadWeatherDataAsyncTask extends
 		sb.append(weatherData.getSubtitle2());
 		sb.append("</p>");
 
-		for (final WeatherText text : weatherData.getWeatherTexts()) {
-			sb.append("<div class=\"weatherText\">");
+		if (weatherData.getWeatherTexts() != null) {
+			for (final WeatherText text : weatherData.getWeatherTexts()) {
+				sb.append("<div class=\"weatherText\">");
 
-			final String head = text.getHead();
-			if (head != null && head.length() > 0) {
-				sb.append("<h3>");
-				sb.append(head);
-				sb.append("</h3>");
+				final String head = text.getHead();
+				if (head != null && head.length() > 0) {
+					sb.append("<h3>");
+					sb.append(head);
+					sb.append("</h3>");
+				}
+
+				sb.append("<p>");
+				sb.append(text.getText());
+				sb.append("</p>");
+
+				sb.append("</div>");
 			}
-
-			sb.append("<p>");
-			sb.append(text.getText());
-			sb.append("</p>");
-
-			sb.append("</div>");
 		}
 
 		sb.append("</div>");
@@ -285,13 +291,13 @@ public class DownloadWeatherDataAsyncTask extends
 		String html = sb.toString();
 
 		// fix html for WebView
-		html = html.replaceAll("ä", "&auml;");
-		html = html.replaceAll("ö", "&ouml;");
-		html = html.replaceAll("ü", "&uuml;");
-		html = html.replaceAll("Ä", "&Auml;");
-		html = html.replaceAll("Ö", "&Ouml;");
-		html = html.replaceAll("Ü", "&Uuml;");
-		html = html.replaceAll("ß", "&szlig;");
+		html = html.replace("ä", "&auml;");
+		html = html.replace("ö", "&ouml;");
+		html = html.replace("ü", "&uuml;");
+		html = html.replace("Ä", "&Auml;");
+		html = html.replace("Ö", "&Ouml;");
+		html = html.replace("Ü", "&Uuml;");
+		html = html.replace("ß", "&szlig;");
 
 		return html;
 	}

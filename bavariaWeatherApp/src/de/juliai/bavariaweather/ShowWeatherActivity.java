@@ -4,39 +4,29 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.GestureDetector;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.widget.AdapterViewFlipper;
 
 /**
  * 
  * @author JuliaI
  * 
  */
-public class ShowWeatherActivity extends Activity {
-
-	private AdapterViewFlipper regionsAdapterViewFlipper;
+public class ShowWeatherActivity extends FragmentActivity {
 
 	private SharedPreferences sharedPrefs;
 
 	private List<Region> regions;
 
-	private RegionsAdapter regionsAdapter;
-
-	private GestureDetector gestureDetector;
-
-	private static final int SWIPE_MIN_DISTANCE = 120;
-
-	private static final int SWIPE_MAX_OFF_PATH = 250;
-
-	private static final int SWIPE_THRESHOLD_VELOCITY = 100;
+	private List<RegionFragment> regionFragments;
 
 	/**
 	 * {@inheritDoc}
@@ -44,83 +34,16 @@ public class ShowWeatherActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_show_weather);
 
-		// init view-flipper
-		regionsAdapterViewFlipper = new AdapterViewFlipper(this);
-		regionsAdapterViewFlipper.setId(R.id.regionsAdapterViewFlipper);
-
-		// try to use animation
-		// final ObjectAnimator slideInLeft = ObjectAnimator.ofFloat(this, "x", 100f, 0);
-		// regionsAdapterViewFlipper.setInAnimation(slideInLeft);
-		// final ObjectAnimator slideOutRight = ObjectAnimator.ofFloat(this, "x", 0, -100f);
-		// regionsAdapterViewFlipper.setOutAnimation(slideOutRight);
-
-		setContentView(regionsAdapterViewFlipper);
-
-		// init storage
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		// init listener
-		initListener();
-
-		// init regions
 		initRegions();
 
-		// init adapter
-		regionsAdapter = new RegionsAdapter(regions);
-		regionsAdapterViewFlipper.setAdapter(regionsAdapter);
-
-	}
-
-	/**
-	 * initializes listener that listens to fling-events
-	 */
-	private void initListener() {
-		final GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
-			@Override
-			public boolean onFling(MotionEvent e1, MotionEvent e2,
-					float velocityX, float velocityY) {
-
-				if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH) {
-					return false;
-				}
-
-				if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-						&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					// right to left swipe
-					regionsAdapterViewFlipper.showNext();
-					return true;
-				} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-						&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					// left to right swipe
-					regionsAdapterViewFlipper.showPrevious();
-					return true;
-				}
-
-				return false;
-			}
-		};
-
-		gestureDetector = new GestureDetector(this, gestureListener);
-	}
-
-	/**
-	 * initializes the regions.
-	 * 
-	 * sharedPrefs and gestureDetector must be already initialized before
-	 * calling this method.
-	 */
-	private void initRegions() {
-		regions = new LinkedList<Region>();
-		regions.add(new Region(
-				"http://www.br.de/wetter/action/bayernwetter/bayern.do",
-				"weatherDataBavaria", sharedPrefs, gestureDetector, this));
-		regions.add(new Region(
-				"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Schwaben&id=0",
-				"weatherDataSwabia", sharedPrefs, gestureDetector, this));
-		regions.add(new Region(
-				"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Oberbayern&id=0",
-				"weatherDataUpperBavaria", sharedPrefs, gestureDetector, this));
+		final ViewPager regionsViewPager = (ViewPager) findViewById(R.id.regionsViewPager);
+		final RegionsPageAdapter regionsPageAdapter = new RegionsPageAdapter(
+				getSupportFragmentManager(), this.regionFragments);
+		regionsViewPager.setAdapter(regionsPageAdapter);
 	}
 
 	/**
@@ -148,6 +71,39 @@ public class ShowWeatherActivity extends Activity {
 	}
 
 	/**
+	 * initializes the regions and regionFragments.
+	 */
+	private void initRegions() {
+		regions = new LinkedList<Region>();
+		regionFragments = new LinkedList<RegionFragment>();
+
+		final String preferencesKeyBavaria = "weatherDataBavaria";
+		final RegionFragment fragmentBavaria = RegionFragment
+				.newInstance(sharedPrefs.getString(preferencesKeyBavaria, ""));
+		regionFragments.add(fragmentBavaria);
+		regions.add(new Region(
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do",
+				preferencesKeyBavaria, fragmentBavaria));
+
+		final String preferencesKeySwabia = "weatherDataSwabia";
+		final RegionFragment fragmentSwabia = RegionFragment
+				.newInstance(sharedPrefs.getString(preferencesKeySwabia, ""));
+		regionFragments.add(fragmentSwabia);
+		regions.add(new Region(
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Schwaben&id=0",
+				preferencesKeySwabia, fragmentSwabia));
+
+		final String preferencesKeyUpperBavaria = "weatherDataUpperBavaria";
+		final RegionFragment fragmentUpperBavaria = RegionFragment
+				.newInstance(sharedPrefs.getString(preferencesKeyUpperBavaria,
+						""));
+		regionFragments.add(fragmentUpperBavaria);
+		regions.add(new Region(
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Oberbayern&id=0",
+				preferencesKeyUpperBavaria, fragmentUpperBavaria));
+	}
+
+	/**
 	 * loads weather data from the internet. Then stores them in the shared
 	 * preferences.
 	 */
@@ -156,6 +112,32 @@ public class ShowWeatherActivity extends Activity {
 			final DownloadWeatherDataAsyncTask task = new DownloadWeatherDataAsyncTask(
 					this, sharedPrefs, region);
 			task.execute(new URL[] {});
+		}
+	}
+
+	/**
+	 * 
+	 * @author JuliaI
+	 * 
+	 */
+	private class RegionsPageAdapter extends FragmentPagerAdapter {
+
+		private List<RegionFragment> fragments;
+
+		public RegionsPageAdapter(FragmentManager fm,
+				List<RegionFragment> fragments) {
+			super(fm);
+			this.fragments = fragments;
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return this.fragments.get(position);
+		}
+
+		@Override
+		public int getCount() {
+			return this.fragments.size();
 		}
 	}
 }
