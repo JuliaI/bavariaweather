@@ -163,8 +163,8 @@ public class DownloadWeatherDataAsyncTask extends
 
 		// fix malformed html so that it can be parsed
 		source = source.replaceAll("</</div>", "</p></div>");
-		source = source.replaceAll("&uuml;", "ü");
-		source = source.replaceAll("&auml;", "ä");
+		source = source.replaceAll("&uuml;", "Ã¼");
+		source = source.replaceAll("&auml;", "Ã¤");
 
 		try {
 			final SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -176,13 +176,8 @@ public class DownloadWeatherDataAsyncTask extends
 			final WeatherData weatherData = handler.getData();
 
 			String html = buildHtml(weatherData);
-			// fix html for WebView
-			html = html.replaceAll("ä", "&auml;");
-			html = html.replaceAll("ö", "&ouml;");
-			html = html.replaceAll("ü", "&uuml;");
-			html = html.replaceAll("ß", "&szlig;");
-
 			result.setData(html);
+
 			return result;
 
 		} catch (ParserConfigurationException e) {
@@ -287,7 +282,18 @@ public class DownloadWeatherDataAsyncTask extends
 		sb.append("</body>");
 		sb.append("</html>");
 
-		return sb.toString();
+		String html = sb.toString();
+
+		// fix html for WebView
+		html = html.replaceAll("Ã¤", "&auml;");
+		html = html.replaceAll("Ã¶", "&ouml;");
+		html = html.replaceAll("Ã¼", "&uuml;");
+		html = html.replaceAll("Ã„", "&Auml;");
+		html = html.replaceAll("Ã–", "&Ouml;");
+		html = html.replaceAll("Ãœ", "&Uuml;");
+		html = html.replaceAll("ÃŸ", "&szlig;");
+
+		return html;
 	}
 
 	/**

@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -47,6 +48,13 @@ public class ShowWeatherActivity extends Activity {
 		// init view-flipper
 		regionsAdapterViewFlipper = new AdapterViewFlipper(this);
 		regionsAdapterViewFlipper.setId(R.id.regionsAdapterViewFlipper);
+
+		// try to use animation
+		// final ObjectAnimator slideInLeft = ObjectAnimator.ofFloat(this, "x", 100f, 0);
+		// regionsAdapterViewFlipper.setInAnimation(slideInLeft);
+		// final ObjectAnimator slideOutRight = ObjectAnimator.ofFloat(this, "x", 0, -100f);
+		// regionsAdapterViewFlipper.setOutAnimation(slideOutRight);
+
 		setContentView(regionsAdapterViewFlipper);
 
 		// init storage
