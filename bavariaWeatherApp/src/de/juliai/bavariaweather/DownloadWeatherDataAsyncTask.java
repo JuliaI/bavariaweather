@@ -91,17 +91,18 @@ public class DownloadWeatherDataAsyncTask extends
 			return result;
 		}
 
+		HttpURLConnection conn = null;
+		InputStream stream = null;
+		InputStreamReader is = null;
+		BufferedReader br = null;
 		try {
-			final HttpURLConnection conn = (HttpURLConnection) url
-					.openConnection();
+			conn = (HttpURLConnection) url.openConnection();
 			conn.connect();
-			final InputStream stream = conn.getInputStream();
-			final InputStreamReader is = new InputStreamReader(stream,
-					Charset.forName("UTF8"));
-			final StringBuilder sb = new StringBuilder();
-			final BufferedReader br = new BufferedReader(is);
+			stream = conn.getInputStream();
+			is = new InputStreamReader(stream, Charset.forName("UTF8"));
+			br = new BufferedReader(is);
 			String read = br.readLine();
-
+			final StringBuilder sb = new StringBuilder();
 			while (read != null) {
 				sb.append(read);
 				read = br.readLine();
@@ -116,6 +117,27 @@ public class DownloadWeatherDataAsyncTask extends
 
 			result.setErrorMessage("Probleme beim Laden der Seite. Stelle sicher, dass eine Internetverbindung besteht.");
 			return result;
+
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+			}
+
+			try {
+				if (stream != null) {
+					stream.close();
+				}
+				if (is != null) {
+					is.close();
+				}
+				if (br != null) {
+					br.close();
+				}
+			} catch (IOException e) {
+				Log.e(this.getClass().getName(),
+						"IOException happened during closing! Message: "
+								+ e.getMessage());
+			}
 		}
 	}
 
@@ -162,16 +184,13 @@ public class DownloadWeatherDataAsyncTask extends
 		}
 
 		// fix malformed html so that it can be parsed
-		source = source.replace("</</div>", "</p></div>");
 		source = source.replace("&uuml;", "ü");
 		source = source.replace("&auml;", "ä");
 
-		// TODO fix for this
-		// source = source.replaceAll("mehr Verkehr</a></p>.+</div></div>",
-		// "mehr Verkehr</a></p></div></div>");
-
 		try {
-			final SAXParserFactory factory = SAXParserFactory.newInstance();
+			final SAXParserFactory factory = SAXParserFactory.newInstance(
+					"org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl",
+					ClassLoader.getSystemClassLoader());
 			final SAXParser saxParser = factory.newSAXParser();
 			final WeatherHandler handler = new WeatherHandler();
 			saxParser.parse(new ByteArrayInputStream(source.getBytes()),
