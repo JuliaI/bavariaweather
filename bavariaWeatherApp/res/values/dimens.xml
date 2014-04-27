@@ -1,7 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- text sizes from markt.de app -->
+    <dimen name="fontSize_xxxlarge">20sp</dimen>
+    <dimen name="fontSize_xxlarge">18sp</dimen>
+    <dimen name="fontSize_xlarge">16sp</dimen>
+    <dimen name="fontSize_large">15sp</dimen>
+    <dimen name="fontSize_medium">13sp</dimen>
+    <dimen name="fontSize_tiny">11sp</dimen>
+
+    <!-- text sizes from android design guide -->
+    <dimen name="textSize_micro">12sp</dimen>
+    <dimen name="textSize_small">14sp</dimen>
+    <dimen name="textSize_medium">18sp</dimen>
+    <dimen name="textSize_large">22sp</dimen>
+    <dimen name="textSize_large_plus">24sp</dimen>
+    <dimen name="textSize_huge">26sp</dimen>
 
 </resources>

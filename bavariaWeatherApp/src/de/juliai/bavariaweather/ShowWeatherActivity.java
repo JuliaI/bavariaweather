@@ -77,30 +77,66 @@ public class ShowWeatherActivity extends FragmentActivity {
 		regions = new LinkedList<Region>();
 		regionFragments = new LinkedList<RegionFragment>();
 
-		final String preferencesKeyBavaria = "weatherDataBavaria";
-		final RegionFragment fragmentBavaria = RegionFragment
-				.newInstance(sharedPrefs.getString(preferencesKeyBavaria, ""));
-		regionFragments.add(fragmentBavaria);
-		regions.add(new Region(
-				"http://www.br.de/wetter/action/bayernwetter/bayern.do",
-				preferencesKeyBavaria, fragmentBavaria));
+		// Bavaria
+		{
+			final String preferencesKeyBavaria = "weatherDataBavaria";
 
-		final String preferencesKeySwabia = "weatherDataSwabia";
-		final RegionFragment fragmentSwabia = RegionFragment
-				.newInstance(sharedPrefs.getString(preferencesKeySwabia, ""));
-		regionFragments.add(fragmentSwabia);
-		regions.add(new Region(
-				"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Schwaben&id=0",
-				preferencesKeySwabia, fragmentSwabia));
+			String weatherDataBavaria = sharedPrefs.getString(
+					preferencesKeyBavaria, "");
+			// remove legacy data, can be removed after first start
+			if (weatherDataBavaria.startsWith("<html")) {
+				weatherDataBavaria = "";
+			}
 
-		final String preferencesKeyUpperBavaria = "weatherDataUpperBavaria";
-		final RegionFragment fragmentUpperBavaria = RegionFragment
-				.newInstance(sharedPrefs.getString(preferencesKeyUpperBavaria,
-						""));
-		regionFragments.add(fragmentUpperBavaria);
-		regions.add(new Region(
-				"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Oberbayern&id=0",
-				preferencesKeyUpperBavaria, fragmentUpperBavaria));
+			final RegionFragment fragmentBavaria = RegionFragment
+					.newInstance(weatherDataBavaria);
+
+			regionFragments.add(fragmentBavaria);
+			regions.add(new Region(
+					"http://www.br.de/wetter/action/bayernwetter/bayern.do",
+					preferencesKeyBavaria, R.drawable.wappenbayern,
+					fragmentBavaria));
+		}
+
+		// Swabia
+		{
+			final String preferencesKeySwabia = "weatherDataSwabia";
+
+			String weatherDataSwabia = sharedPrefs.getString(
+					preferencesKeySwabia, "");
+			if (weatherDataSwabia.startsWith("<html")) {
+				weatherDataSwabia = "";
+			}
+
+			final RegionFragment fragmentSwabia = RegionFragment
+					.newInstance(weatherDataSwabia);
+
+			regionFragments.add(fragmentSwabia);
+			regions.add(new Region(
+					"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Schwaben&id=0",
+					preferencesKeySwabia, R.drawable.wappenschwaben,
+					fragmentSwabia));
+		}
+
+		// Upper Bavaria
+		{
+			final String preferencesKeyUpperBavaria = "weatherDataUpperBavaria";
+
+			String weatherDataUpperBavaria = sharedPrefs.getString(
+					preferencesKeyUpperBavaria, "");
+			if (weatherDataUpperBavaria.startsWith("<html")) {
+				weatherDataUpperBavaria = "";
+			}
+
+			final RegionFragment fragmentUpperBavaria = RegionFragment
+					.newInstance(weatherDataUpperBavaria);
+
+			regionFragments.add(fragmentUpperBavaria);
+			regions.add(new Region(
+					"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Oberbayern&id=0",
+					preferencesKeyUpperBavaria, R.drawable.wappenoberbayern,
+					fragmentUpperBavaria));
+		}
 	}
 
 	/**

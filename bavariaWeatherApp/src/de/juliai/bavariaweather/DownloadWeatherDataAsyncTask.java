@@ -9,8 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +26,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
+import de.juliai.bavariaweather.WeatherData.WeatherText;
 
 /**
  * 
@@ -60,14 +59,6 @@ public class DownloadWeatherDataAsyncTask extends
 		this.sharedPrefs = sharedPrefs;
 		this.region = region;
 		this.pattern = Pattern.compile(DIGITS);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void onPreExecute() {
-		region.changeWeatherData("Wetterdaten werden geladen...");
 	}
 
 	/**
@@ -147,24 +138,23 @@ public class DownloadWeatherDataAsyncTask extends
 	@Override
 	protected void onPostExecute(AsyncTaskResult result) {
 		// the html-data
-		final String htmlData = result.getData();
-		if (htmlData != null && htmlData.length() > 0) {
+		final WeatherData weatherData = result.getData();
+		if (weatherData != null) {
+			final String serializedWeatherData = WeatherDataSerializer
+					.serialize(weatherData);
 
 			final Editor prefsEditor = sharedPrefs.edit();
-			prefsEditor.putString(region.getPreferencesKey(), htmlData);
+			prefsEditor.putString(region.getPreferencesKey(),
+					serializedWeatherData);
 			prefsEditor.commit();
 
-			region.changeWeatherData(htmlData);
+			region.changeWeatherData(serializedWeatherData);
 
-		} else {
-			// if no new data could be retrieved: show at least old data
-			region.changeWeatherData(sharedPrefs.getString(
-					region.getPreferencesKey(), ""));
 		}
 
 		// show the error-message in toast
 		final String errorMessage = result.getErrorMessage();
-		if (errorMessage != null && errorMessage.length() > 0) {
+		if (StringUtils.isNotEmpty(errorMessage)) {
 			Toast.makeText(thisActivity,
 					region.getPreferencesKey() + ": " + errorMessage,
 					Toast.LENGTH_LONG).show();
@@ -178,7 +168,7 @@ public class DownloadWeatherDataAsyncTask extends
 	 */
 	private AsyncTaskResult extractWeather(String source,
 			final AsyncTaskResult result) {
-		if (source == null || source.length() <= 0) {
+		if (StringUtils.isEmpty(source)) {
 			result.setErrorMessage("Keine Daten erhalten. Versuch es in ein paar Minuten noch einmal.");
 			return result;
 		}
@@ -197,9 +187,10 @@ public class DownloadWeatherDataAsyncTask extends
 					handler);
 
 			final WeatherData weatherData = handler.getData();
+			weatherData.setCrestDrawableId(region.getCrestDrawableId());
 
-			String html = buildHtml(weatherData);
-			result.setData(html);
+			// final String html = buildHtml(weatherData);
+			result.setData(weatherData);
 
 			return result;
 
@@ -221,7 +212,7 @@ public class DownloadWeatherDataAsyncTask extends
 			final Matcher matcher = pattern.matcher(exceptionMsg);
 			if (matcher.find()) {
 				final String group = matcher.group(1);
-				if (group != null && group.length() > 0) {
+				if (StringUtils.isNotEmpty(group)) {
 					int column = Integer.parseInt(group);
 
 					int start = column - 20;
@@ -258,6 +249,7 @@ public class DownloadWeatherDataAsyncTask extends
 	 * @param weatherData
 	 * @return
 	 */
+	@Deprecated
 	private String buildHtml(final WeatherData weatherData) {
 		final StringBuilder sb = new StringBuilder();
 
@@ -288,7 +280,7 @@ public class DownloadWeatherDataAsyncTask extends
 				sb.append("<div class=\"weatherText\">");
 
 				final String head = text.getHead();
-				if (head != null && head.length() > 0) {
+				if (StringUtils.isNotEmpty(head)) {
 					sb.append("<h3>");
 					sb.append(head);
 					sb.append("</h3>");
@@ -492,103 +484,6 @@ public class DownloadWeatherDataAsyncTask extends
 			}
 
 			return classAttrValue;
-		}
-	}
-
-	/**
-	 * 
-	 * @author JuliaI
-	 * 
-	 */
-	private final static class WeatherData {
-
-		private String title; // h1, class="br-wetter"
-
-		private String subtitle1; // p, class="vorhersage"
-
-		private String subtitle2; // div, class="Schlagzeile"
-
-		private String timestamp; // div, class="TimeStamp"
-
-		private List<WeatherText> weatherTexts; // div, class="WetterTextBlock"
-
-		public String getTitle() {
-			return title;
-		}
-
-		public void setTitle(String title) {
-			this.title = title;
-		}
-
-		public String getSubtitle1() {
-			return subtitle1;
-		}
-
-		public void setSubtitle1(String subtitle1) {
-			this.subtitle1 = subtitle1;
-		}
-
-		public String getSubtitle2() {
-			return subtitle2;
-		}
-
-		public void setSubtitle2(String subtitle2) {
-			this.subtitle2 = subtitle2;
-		}
-
-		public String getTimestamp() {
-			return timestamp;
-		}
-
-		public void setTimestamp(String timestamp) {
-			this.timestamp = timestamp;
-		}
-
-		public List<WeatherText> getWeatherTexts() {
-			return weatherTexts;
-		}
-
-		public void addWeatherText(WeatherText text) {
-			if (weatherTexts == null) {
-				weatherTexts = new LinkedList<WeatherText>();
-			}
-			weatherTexts.add(new WeatherText(text));
-		}
-	}
-
-	/**
-	 * 
-	 * @author JuliaI
-	 * 
-	 */
-	private final static class WeatherText {
-
-		private String head;
-
-		private String text;
-
-		WeatherText() {
-		}
-
-		WeatherText(WeatherText other) {
-			this.head = other.head;
-			this.text = other.text;
-		}
-
-		public String getHead() {
-			return head;
-		}
-
-		public void setHead(String head) {
-			this.head = head;
-		}
-
-		public String getText() {
-			return text;
-		}
-
-		public void setText(String text) {
-			this.text = text;
 		}
 	}
 }

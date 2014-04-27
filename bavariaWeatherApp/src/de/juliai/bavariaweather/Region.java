@@ -11,17 +11,20 @@ public class Region {
 
 	private String preferencesKey;
 
+	private int crestDrawableId;
+
 	private RegionFragment fragment;
 
 	public Region(final String url, final String preferencesKey,
-			final RegionFragment fragment) {
+			final int crestDrawableId, final RegionFragment fragment) {
 		this.url = url;
 		this.preferencesKey = preferencesKey;
+		this.crestDrawableId = crestDrawableId;
 		this.fragment = fragment;
 	}
 
-	public void changeWeatherData(final String newWeatherData) {
-		this.fragment.changeWeatherData(newWeatherData);
+	public void changeWeatherData(final String newSerializedWeatherData) {
+		this.fragment.changeWeatherData(newSerializedWeatherData);
 	}
 
 	public String getUrl() {
@@ -38,6 +41,14 @@ public class Region {
 
 	public void setPreferencesKey(String preferencesKey) {
 		this.preferencesKey = preferencesKey;
+	}
+
+	public int getCrestDrawableId() {
+		return crestDrawableId;
+	}
+
+	public void setCrestDrawableId(int crestDrawableId) {
+		this.crestDrawableId = crestDrawableId;
 	}
 
 	public RegionFragment getFragment() {

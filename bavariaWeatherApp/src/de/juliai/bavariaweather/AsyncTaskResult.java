@@ -7,15 +7,15 @@ package de.juliai.bavariaweather;
  */
 public class AsyncTaskResult {
 
-	private String data;
+	private WeatherData data;
 
 	private String errorMessage;
 
-	public String getData() {
+	public WeatherData getData() {
 		return data;
 	}
 
-	public void setData(String data) {
+	public void setData(WeatherData data) {
 		this.data = data;
 	}
 
