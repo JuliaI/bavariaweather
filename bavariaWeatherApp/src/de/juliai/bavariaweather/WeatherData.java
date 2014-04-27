@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class WeatherData {
 
-	private int crestDrawableId;
+	private String crestDrawableName;
 
 	private String title; // h1, class="br-wetter"
 
@@ -22,12 +22,12 @@ public class WeatherData {
 
 	private List<WeatherText> weatherTexts; // div, class="WetterTextBlock"
 
-	public int getCrestDrawableId() {
-		return crestDrawableId;
+	public String getCrestDrawableName() {
+		return crestDrawableName;
 	}
 
-	public void setCrestDrawableId(int crestDrawableId) {
-		this.crestDrawableId = crestDrawableId;
+	public void setCrestDrawableName(String crestDrawableName) {
+		this.crestDrawableName = crestDrawableName;
 	}
 
 	public String getTitle() {

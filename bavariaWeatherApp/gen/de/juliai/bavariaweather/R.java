@@ -37,28 +37,31 @@ public final class R {
         public static final int textSize_small=0x7f040009;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int ic_launcher_old=0x7f020001;
-        public static final int keep=0x7f020002;
-        public static final int wappenbayern=0x7f020003;
-        public static final int wappenoberbayern=0x7f020004;
-        public static final int wappenschwaben=0x7f020005;
+        public static final int ic_action_refresh=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
+        public static final int ic_launcher_old=0x7f020002;
+        public static final int keep=0x7f020003;
+        public static final int wappenbayern=0x7f020004;
+        public static final int wappenoberbayern=0x7f020005;
+        public static final int wappenschwaben=0x7f020006;
     }
     public static final class id {
-        public static final int action_settings=0x7f080008;
-        public static final int dynamicTextContainer=0x7f080007;
-        public static final int firstRuler=0x7f080003;
-        public static final int itemRefresh=0x7f080009;
-        public static final int regionsViewPager=0x7f080000;
-        public static final int subtitle1=0x7f080004;
-        public static final int subtitle2=0x7f080006;
-        public static final int textContainer=0x7f080001;
-        public static final int timestamp=0x7f080005;
-        public static final int title=0x7f080002;
+        public static final int action_settings=0x7f080009;
+        public static final int dynamicTextContainer=0x7f080008;
+        public static final int firstRuler=0x7f080004;
+        public static final int itemRefresh=0x7f08000a;
+        public static final int progressBar=0x7f080000;
+        public static final int regionsViewPager=0x7f080001;
+        public static final int subtitle1=0x7f080005;
+        public static final int subtitle2=0x7f080007;
+        public static final int textContainer=0x7f080002;
+        public static final int timestamp=0x7f080006;
+        public static final int title=0x7f080003;
     }
     public static final class layout {
-        public static final int activity_show_weather=0x7f030000;
-        public static final int region_page_layout=0x7f030001;
+        public static final int action_progressbar=0x7f030000;
+        public static final int activity_show_weather=0x7f030001;
+        public static final int region_page_layout=0x7f030002;
     }
     public static final class menu {
         public static final int show_weather=0x7f070000;

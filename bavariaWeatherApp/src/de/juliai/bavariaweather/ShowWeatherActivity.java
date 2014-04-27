@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import de.juliai.bavariaweather.AsyncTaskCounter.AsyncTaskCounterCallback;
 
 /**
  * 
@@ -21,6 +23,10 @@ import android.view.MenuItem;
  * 
  */
 public class ShowWeatherActivity extends FragmentActivity {
+
+	private static final String VERSION_KEY = "bavariaWeatherVersion";
+
+	private static final String CURRENT_VERSION = "1.5";
 
 	private SharedPreferences sharedPrefs;
 
@@ -53,7 +59,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.show_weather_menu, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	/**
@@ -63,7 +69,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.itemRefresh:
-			reloadWeatherInfo();
+			reloadWeatherInfo(item);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -77,15 +83,27 @@ public class ShowWeatherActivity extends FragmentActivity {
 		regions = new LinkedList<Region>();
 		regionFragments = new LinkedList<RegionFragment>();
 
+		// check version
+		boolean deleteData;
+		final String version = sharedPrefs.getString(VERSION_KEY, "");
+		if (CURRENT_VERSION.equals(version)) {
+			deleteData = false;
+
+		} else {
+			deleteData = true;
+			final Editor prefsEditor = sharedPrefs.edit();
+			prefsEditor.putString(VERSION_KEY, CURRENT_VERSION);
+			prefsEditor.commit();
+		}
+
 		// Bavaria
 		{
 			final String preferencesKeyBavaria = "weatherDataBavaria";
 
-			String weatherDataBavaria = sharedPrefs.getString(
-					preferencesKeyBavaria, "");
-			// remove legacy data, can be removed after first start
-			if (weatherDataBavaria.startsWith("<html")) {
-				weatherDataBavaria = "";
+			String weatherDataBavaria = "";
+			if (!deleteData) {
+				weatherDataBavaria = sharedPrefs.getString(
+						preferencesKeyBavaria, "");
 			}
 
 			final RegionFragment fragmentBavaria = RegionFragment
@@ -94,7 +112,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 			regionFragments.add(fragmentBavaria);
 			regions.add(new Region(
 					"http://www.br.de/wetter/action/bayernwetter/bayern.do",
-					preferencesKeyBavaria, R.drawable.wappenbayern,
+					preferencesKeyBavaria, "@drawable/wappenbayern",
 					fragmentBavaria));
 		}
 
@@ -102,10 +120,10 @@ public class ShowWeatherActivity extends FragmentActivity {
 		{
 			final String preferencesKeySwabia = "weatherDataSwabia";
 
-			String weatherDataSwabia = sharedPrefs.getString(
-					preferencesKeySwabia, "");
-			if (weatherDataSwabia.startsWith("<html")) {
-				weatherDataSwabia = "";
+			String weatherDataSwabia = "";
+			if (!deleteData) {
+				weatherDataSwabia = sharedPrefs.getString(preferencesKeySwabia,
+						"");
 			}
 
 			final RegionFragment fragmentSwabia = RegionFragment
@@ -114,7 +132,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 			regionFragments.add(fragmentSwabia);
 			regions.add(new Region(
 					"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Schwaben&id=0",
-					preferencesKeySwabia, R.drawable.wappenschwaben,
+					preferencesKeySwabia, "@drawable/wappenschwaben",
 					fragmentSwabia));
 		}
 
@@ -122,10 +140,10 @@ public class ShowWeatherActivity extends FragmentActivity {
 		{
 			final String preferencesKeyUpperBavaria = "weatherDataUpperBavaria";
 
-			String weatherDataUpperBavaria = sharedPrefs.getString(
-					preferencesKeyUpperBavaria, "");
-			if (weatherDataUpperBavaria.startsWith("<html")) {
-				weatherDataUpperBavaria = "";
+			String weatherDataUpperBavaria = "";
+			if (!deleteData) {
+				weatherDataUpperBavaria = sharedPrefs.getString(
+						preferencesKeyUpperBavaria, "");
 			}
 
 			final RegionFragment fragmentUpperBavaria = RegionFragment
@@ -134,19 +152,34 @@ public class ShowWeatherActivity extends FragmentActivity {
 			regionFragments.add(fragmentUpperBavaria);
 			regions.add(new Region(
 					"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Oberbayern&id=0",
-					preferencesKeyUpperBavaria, R.drawable.wappenoberbayern,
+					preferencesKeyUpperBavaria, "@drawable/wappenoberbayern",
 					fragmentUpperBavaria));
 		}
 	}
 
 	/**
-	 * loads weather data from the internet. Then stores them in the shared
+	 * loads the weather-data from the internet and stores it in the shared
 	 * preferences.
 	 */
-	private void reloadWeatherInfo() {
+	private void reloadWeatherInfo(final MenuItem item) {
+		// start refresh-icon-spinner
+		item.setActionView(R.layout.action_progressbar);
+		item.expandActionView();
+
+		final AsyncTaskCounter counter = new AsyncTaskCounter(regions.size(),
+				new AsyncTaskCounterCallback() {
+					@Override
+					public void onFinishedAllTasks() {
+						// stop refresh-icon-spinner
+						item.collapseActionView();
+						item.setActionView(null);
+					}
+				});
+
+		// refresh weather data for all regions
 		for (final Region region : regions) {
 			final DownloadWeatherDataAsyncTask task = new DownloadWeatherDataAsyncTask(
-					this, sharedPrefs, region);
+					this, sharedPrefs, region, counter);
 			task.execute(new URL[] {});
 		}
 	}

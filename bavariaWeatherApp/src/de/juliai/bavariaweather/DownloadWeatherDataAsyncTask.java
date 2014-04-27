@@ -46,18 +46,23 @@ public class DownloadWeatherDataAsyncTask extends
 
 	private final Region region;
 
+	private final AsyncTaskCounter counter;
+
 	/**
 	 * constructor
 	 * 
 	 * @param activity
 	 * @param sharedPrefs
 	 * @param region
+	 * @param counter
 	 */
 	public DownloadWeatherDataAsyncTask(final Activity activity,
-			final SharedPreferences sharedPrefs, final Region region) {
+			final SharedPreferences sharedPrefs, final Region region,
+			final AsyncTaskCounter counter) {
 		this.thisActivity = activity;
 		this.sharedPrefs = sharedPrefs;
 		this.region = region;
+		this.counter = counter;
 		this.pattern = Pattern.compile(DIGITS);
 	}
 
@@ -159,6 +164,8 @@ public class DownloadWeatherDataAsyncTask extends
 					region.getPreferencesKey() + ": " + errorMessage,
 					Toast.LENGTH_LONG).show();
 		}
+
+		counter.finished();
 	}
 
 	/**
@@ -187,7 +194,7 @@ public class DownloadWeatherDataAsyncTask extends
 					handler);
 
 			final WeatherData weatherData = handler.getData();
-			weatherData.setCrestDrawableId(region.getCrestDrawableId());
+			weatherData.setCrestDrawableName(region.getCrestDrawableName());
 
 			// final String html = buildHtml(weatherData);
 			result.setData(weatherData);

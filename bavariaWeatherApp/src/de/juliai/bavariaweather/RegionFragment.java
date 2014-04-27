@@ -121,18 +121,27 @@ public class RegionFragment extends Fragment {
 			return;
 		}
 
+		final FragmentActivity activity = getActivity();
+
+		// main title
 		final TextView textTitle = (TextView) view.findViewById(R.id.title);
 		textTitle.setText(weatherData.getTitle());
-		final Drawable crest = getResources().getDrawable(
-				weatherData.getCrestDrawableId());
+
+		final int identifier = getResources().getIdentifier(
+				weatherData.getCrestDrawableName(), null,
+				activity.getPackageName());
+		final Drawable crest = getResources().getDrawable(identifier);
 		crest.setBounds(0, 0, CREST_WIDTH, CREST_HEIGHT);
 		textTitle.setCompoundDrawables(null, crest, null, null);
+
 		textTitle.setPadding(PAD_LEFT, PAD_TOP, PAD_RIGHT, PAD_BOTTOM_TEXT);
 
+		// first horizontal ruler
 		final View firstRuler = view.findViewById(R.id.firstRuler);
 		firstRuler.setBackgroundColor(RULER_COLOR);
 		firstRuler.setLayoutParams(RULER_LAYOUT);
 
+		// subtitles
 		final TextView textSubtitle1 = (TextView) view
 				.findViewById(R.id.subtitle1);
 		textSubtitle1.setPadding(PAD_LEFT, 0, PAD_RIGHT, 0);
@@ -148,11 +157,11 @@ public class RegionFragment extends Fragment {
 		textSubtitle2.setPadding(PAD_LEFT, 0, PAD_RIGHT, PAD_BOTTOM_TEXT);
 		textSubtitle2.setText(weatherData.getSubtitle2());
 
+		// dynamic texts
 		if (weatherData.getWeatherTexts() != null) {
 			final LinearLayout textContainer = (LinearLayout) view
 					.findViewById(R.id.dynamicTextContainer);
 			textContainer.removeAllViews();
-			final FragmentActivity activity = getActivity();
 
 			for (final WeatherText text : weatherData.getWeatherTexts()) {
 

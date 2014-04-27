@@ -11,15 +11,15 @@ public class Region {
 
 	private String preferencesKey;
 
-	private int crestDrawableId;
+	private String crestDrawableName;
 
 	private RegionFragment fragment;
 
 	public Region(final String url, final String preferencesKey,
-			final int crestDrawableId, final RegionFragment fragment) {
+			final String crestDrawableName, final RegionFragment fragment) {
 		this.url = url;
 		this.preferencesKey = preferencesKey;
-		this.crestDrawableId = crestDrawableId;
+		this.crestDrawableName = crestDrawableName;
 		this.fragment = fragment;
 	}
 
@@ -43,12 +43,12 @@ public class Region {
 		this.preferencesKey = preferencesKey;
 	}
 
-	public int getCrestDrawableId() {
-		return crestDrawableId;
+	public String getCrestDrawableName() {
+		return crestDrawableName;
 	}
 
-	public void setCrestDrawableId(int crestDrawableId) {
-		this.crestDrawableId = crestDrawableId;
+	public void setCrestDrawableName(String crestDrawableName) {
+		this.crestDrawableName = crestDrawableName;
 	}
 
 	public RegionFragment getFragment() {

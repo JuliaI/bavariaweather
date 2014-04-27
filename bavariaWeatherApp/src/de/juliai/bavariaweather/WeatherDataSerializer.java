@@ -26,8 +26,8 @@ public class WeatherDataSerializer {
 		final JSONObject weatherDataJson = new JSONObject();
 
 		try {
-			weatherDataJson.put("crestDrawableId",
-					weatherData.getCrestDrawableId());
+			weatherDataJson.put("crestDrawableName",
+					weatherData.getCrestDrawableName());
 			weatherDataJson.put("title", weatherData.getTitle());
 			weatherDataJson.put("subtitle1", weatherData.getSubtitle1());
 			weatherDataJson.put("subtitle2", weatherData.getSubtitle2());
@@ -72,8 +72,8 @@ public class WeatherDataSerializer {
 		try {
 			final JSONObject weatherDataJson = new JSONObject(weatherDataString);
 
-			weatherData.setCrestDrawableId(weatherDataJson
-					.getInt("crestDrawableId"));
+			weatherData.setCrestDrawableName(weatherDataJson
+					.getString("crestDrawableName"));
 			weatherData.setTitle(weatherDataJson.getString("title"));
 			weatherData.setSubtitle1(weatherDataJson.getString("subtitle1"));
 			weatherData.setSubtitle2(weatherDataJson.getString("subtitle2"));
