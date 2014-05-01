@@ -92,7 +92,7 @@ public class WeatherDataSerializer {
 					// do nothing, that's fine
 				}
 
-				text.setText(weatherTextJson.getString("text"));
+				text.appendText(weatherTextJson.getString("text"));
 				weatherData.addWeatherText(text);
 			}
 

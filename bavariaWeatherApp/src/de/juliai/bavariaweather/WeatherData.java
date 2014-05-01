@@ -104,8 +104,12 @@ public class WeatherData {
 			return text;
 		}
 
-		public void setText(String text) {
-			this.text = StringUtils.clean(text);
+		public void appendText(String text) {
+			if(StringUtils.isEmpty(this.text)) {
+				this.text = StringUtils.clean(text);
+			} else {
+				this.text = this.text + StringUtils.clean(text);
+			}
 		}
 	}
 }

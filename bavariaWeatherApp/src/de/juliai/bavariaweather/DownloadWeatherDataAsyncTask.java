@@ -411,7 +411,6 @@ public class DownloadWeatherDataAsyncTask extends
 					} else if (foundDivWetterTextBlock
 							&& classAttrValue.equals("TextBlockText")) {
 						foundWetterTextBlockText = true;
-						foundDivWetterTextBlock = false;
 					}
 				}
 			}
@@ -457,11 +456,6 @@ public class DownloadWeatherDataAsyncTask extends
 
 				currentText.setHead(new String(ch, start, length));
 
-				if (currentText.getText() != null) {
-					data.addWeatherText(currentText);
-					currentText = null;
-				}
-
 				foundWetterTextBlockHead = false;
 			}
 
@@ -470,12 +464,26 @@ public class DownloadWeatherDataAsyncTask extends
 					currentText = new WeatherText();
 				}
 
-				currentText.setText(new String(ch, start, length));
+				currentText.appendText(new String(ch, start, length));
+			}
+		}
 
-				data.addWeatherText(currentText);
-				currentText = null;
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void endElement(String uri, String localName, String qName)
+				throws SAXException {
+			if (qName.equalsIgnoreCase("div")) {
+				if (foundDivWetterTextBlock) {
+					foundWetterTextBlockText = false;
+					foundDivWetterTextBlock = false;
 
-				foundWetterTextBlockText = false;
+					if (currentText != null) {
+						data.addWeatherText(currentText);
+						currentText = null;
+					}
+				}
 			}
 		}
 
