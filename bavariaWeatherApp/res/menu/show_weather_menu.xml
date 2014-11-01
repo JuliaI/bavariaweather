@@ -4,9 +4,20 @@
 
     <item
         android:id="@+id/itemRefresh"
-        android:showAsAction="always"
         android:icon="@drawable/ic_action_refresh"
-        android:title="@string/menu_item_refresh">
-    </item>
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_item_refresh"/>
+    <item
+        android:id="@+id/dropdown_settings"
+        android:showAsAction="never"
+        android:title="@string/dropdown_settings"/>
+    <item
+        android:id="@+id/dropdown_delete_cache"
+        android:showAsAction="never"
+        android:title="@string/dropdown_delete_cache"/>
+    <item
+        android:id="@+id/dropdown_about"
+        android:showAsAction="never"
+        android:title="@string/dropdown_about"/>
 
 </menu>

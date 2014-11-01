@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import de.juliai.bavariaweather.AsyncTaskCounter.AsyncTaskCounterCallback;
 
 /**
@@ -70,6 +71,15 @@ public class ShowWeatherActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.itemRefresh:
 			reloadWeatherInfo(item);
+			return true;
+		case R.id.dropdown_settings:
+			Toast.makeText(this, "clicked menu settings item!", Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.dropdown_delete_cache:
+			Toast.makeText(this, "clicked menu delete-cache item!", Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.dropdown_about:
+			Toast.makeText(this, "clicked menu about item!", Toast.LENGTH_SHORT).show();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

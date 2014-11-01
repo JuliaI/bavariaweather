@@ -46,10 +46,12 @@ public final class R {
         public static final int wappenschwaben=0x7f020006;
     }
     public static final class id {
-        public static final int action_settings=0x7f080009;
+        public static final int dropdown_about=0x7f08000c;
+        public static final int dropdown_delete_cache=0x7f08000b;
+        public static final int dropdown_settings=0x7f08000a;
         public static final int dynamicTextContainer=0x7f080008;
         public static final int firstRuler=0x7f080004;
-        public static final int itemRefresh=0x7f08000a;
+        public static final int itemRefresh=0x7f080009;
         public static final int progressBar=0x7f080000;
         public static final int regionsViewPager=0x7f080001;
         public static final int subtitle1=0x7f080005;
@@ -64,12 +66,13 @@ public final class R {
         public static final int region_page_layout=0x7f030002;
     }
     public static final class menu {
-        public static final int show_weather=0x7f070000;
-        public static final int show_weather_menu=0x7f070001;
+        public static final int show_weather_menu=0x7f070000;
     }
     public static final class string {
-        public static final int action_settings=0x7f050003;
         public static final int app_name=0x7f050000;
+        public static final int dropdown_about=0x7f050005;
+        public static final int dropdown_delete_cache=0x7f050004;
+        public static final int dropdown_settings=0x7f050003;
         public static final int menu_item_refresh=0x7f050002;
         public static final int title_activity_show_weather=0x7f050001;
     }
