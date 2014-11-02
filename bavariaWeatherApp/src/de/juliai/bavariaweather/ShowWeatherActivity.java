@@ -28,23 +28,7 @@ import de.juliai.bavariaweather.AsyncTaskCounter.AsyncTaskCounterCallback;
  */
 public class ShowWeatherActivity extends FragmentActivity {
 
-	private static final String KEY_VERSION = "bavariaWeatherVersion";
-
-	private static final String CURRENT_VERSION = "1.5";
-
-	private static final int CURRENT_NUMBER_OF_REGIONS = 3;
-
-	private static final String KEY_DATA_BAVARIA = "weatherData_bavaria";
-
-	private static final String KEY_DATA_SWABIA = "weatherData_swabia";
-
-	private static final String KEY_DATA_UPPERBAVARIA = "weatherData_upperBavaria";
-
-	private static final String KEY_SEL_BAVARIA = "weatherSetting_sel_bavaria";
-
-	private static final String KEY_SEL_SWABIA = "weatherSetting_sel_swabia";
-
-	private static final String KEY_SEL_UPPERBAVARIA = "weatherSetting_sel_upperBavaria";
+	private static final int NUMBER_OF_REGIONS = 3;
 
 	private SharedPreferences sharedPrefs;
 
@@ -53,6 +37,8 @@ public class ShowWeatherActivity extends FragmentActivity {
 	private List<Region> regions;
 
 	private List<RegionFragment> regionFragments;
+
+	private List<String> dataKeys;
 
 	private List<String> selectionKeys;
 
@@ -97,8 +83,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 			showWeatherSettings();
 			return true;
 		case R.id.dropdown_delete_cache:
-			Toast.makeText(this, "clicked menu delete-cache item!",
-					Toast.LENGTH_SHORT).show();
+			deleteCache();
 			return true;
 		case R.id.dropdown_about:
 			Toast.makeText(this, "clicked menu about item!", Toast.LENGTH_SHORT)
@@ -113,12 +98,11 @@ public class ShowWeatherActivity extends FragmentActivity {
 	 * initializes the regions and regionFragments.
 	 */
 	private void initRegions() {
-		regions = new LinkedList<Region>();
-		regionFragments = new ArrayList<RegionFragment>(
-				CURRENT_NUMBER_OF_REGIONS);
-		selectionKeys = new LinkedList<String>();
 
 		// check version
+		final String KEY_VERSION = "bavariaWeatherVersion";
+		final String CURRENT_VERSION = "1.5";
+
 		boolean deleteData;
 		final String version = sharedPrefs.getString(KEY_VERSION, "");
 		if (CURRENT_VERSION.equals(version)) {
@@ -131,80 +115,61 @@ public class ShowWeatherActivity extends FragmentActivity {
 			prefsEditor.commit();
 		}
 
-		// Bavaria
-		{
-			final boolean selectionBavaria = sharedPrefs.getBoolean(
-					KEY_SEL_BAVARIA, true);
-			selectionKeys.add(KEY_SEL_BAVARIA);
+		// init regions
+		/*
+		 * if you update something here, also update 
+		 * - int NUMBER_OF_REGIONS 
+		 * - weather_settings.xml
+		 */
+		final List<RegionDo> regionDos = new LinkedList<RegionDo>();
 
-			String weatherDataBavaria = "";
+		final RegionDo bavaria = new RegionDo("weatherData_bavaria",
+				"weatherSetting_sel_bavaria",
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do",
+				"@drawable/wappenbayern");
+		regionDos.add(bavaria);
+
+		final RegionDo swabia = new RegionDo(
+				"weatherData_swabia",
+				"weatherSetting_sel_swabia",
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Schwaben&id=0",
+				"@drawable/wappenschwaben");
+		regionDos.add(swabia);
+
+		final RegionDo upperBavaria = new RegionDo(
+				"weatherData_upperBavaria",
+				"weatherSetting_sel_upperBavaria",
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Oberbayern&id=0",
+				"@drawable/wappenoberbayern");
+		regionDos.add(upperBavaria);
+
+		regions = new LinkedList<Region>();
+		regionFragments = new ArrayList<RegionFragment>(NUMBER_OF_REGIONS);
+		dataKeys = new LinkedList<String>();
+		selectionKeys = new LinkedList<String>();
+
+		for (final RegionDo regionDo : regionDos) {
+			dataKeys.add(regionDo.getDataKey());
+			selectionKeys.add(regionDo.getSelectionKey());
+
+			String weatherData = "";
 			if (!deleteData) {
-				weatherDataBavaria = sharedPrefs
-						.getString(KEY_DATA_BAVARIA, "");
+				weatherData = sharedPrefs.getString(regionDo.getDataKey(), "");
 			}
 
-			final RegionFragment fragmentBavaria = RegionFragment
-					.newInstance(weatherDataBavaria);
+			final RegionFragment fragment = RegionFragment
+					.newInstance(weatherData);
 
-			if (selectionBavaria) {
-				regionFragments.add(fragmentBavaria);
+			final boolean selection = sharedPrefs.getBoolean(
+					regionDo.getSelectionKey(), true);
+
+			if (selection) {
+				regionFragments.add(fragment);
 			}
 
-			regions.add(new Region(selectionBavaria, KEY_SEL_BAVARIA,
-					"http://www.br.de/wetter/action/bayernwetter/bayern.do",
-					KEY_DATA_BAVARIA, "@drawable/wappenbayern", fragmentBavaria));
-		}
-
-		// Swabia
-		{
-			final boolean selectionSwabia = sharedPrefs.getBoolean(
-					KEY_SEL_SWABIA, false);
-			selectionKeys.add(KEY_SEL_SWABIA);
-
-			String weatherDataSwabia = "";
-			if (!deleteData) {
-				weatherDataSwabia = sharedPrefs.getString(KEY_DATA_SWABIA, "");
-			}
-
-			final RegionFragment fragmentSwabia = RegionFragment
-					.newInstance(weatherDataSwabia);
-
-			if (selectionSwabia) {
-				regionFragments.add(fragmentSwabia);
-			}
-
-			regions.add(new Region(
-					selectionSwabia,
-					KEY_SEL_SWABIA,
-					"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Schwaben&id=0",
-					KEY_DATA_SWABIA, "@drawable/wappenschwaben", fragmentSwabia));
-		}
-
-		// Upper Bavaria
-		{
-			final boolean selectionUpperBavaria = sharedPrefs.getBoolean(
-					KEY_SEL_UPPERBAVARIA, false);
-			selectionKeys.add(KEY_SEL_UPPERBAVARIA);
-
-			String weatherDataUpperBavaria = "";
-			if (!deleteData) {
-				weatherDataUpperBavaria = sharedPrefs.getString(
-						KEY_DATA_UPPERBAVARIA, "");
-			}
-
-			final RegionFragment fragmentUpperBavaria = RegionFragment
-					.newInstance(weatherDataUpperBavaria);
-
-			if (selectionUpperBavaria) {
-				regionFragments.add(fragmentUpperBavaria);
-			}
-
-			regions.add(new Region(
-					selectionUpperBavaria,
-					KEY_SEL_UPPERBAVARIA,
-					"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Oberbayern&id=0",
-					KEY_DATA_UPPERBAVARIA, "@drawable/wappenoberbayern",
-					fragmentUpperBavaria));
+			regions.add(new Region(selection, regionDo.getSelectionKey(),
+					regionDo.getUrl(), regionDo.getDataKey(), regionDo
+							.getCrestDrawableName(), fragment));
 		}
 	}
 
@@ -263,8 +228,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// after user closed the settings:
-		regionFragments = new ArrayList<RegionFragment>(
-				CURRENT_NUMBER_OF_REGIONS);
+		regionFragments = new ArrayList<RegionFragment>(NUMBER_OF_REGIONS);
 
 		for (final String selectionKey : selectionKeys) {
 			final boolean selection = sharedPrefs.getBoolean(selectionKey,
@@ -285,6 +249,57 @@ public class ShowWeatherActivity extends FragmentActivity {
 		regionsPageAdapter.notifyDataSetChanged();
 
 		reloadWeatherInfo(null);
+	}
+
+	/**
+	 * deletes all the weather-data
+	 */
+	private void deleteCache() {
+		final Editor prefsEditor = sharedPrefs.edit();
+		for (final String dataKey : dataKeys) {
+			prefsEditor.remove(dataKey);
+		}
+		prefsEditor.commit();
+	}
+
+	/**
+	 * 
+	 * @author JuliaI
+	 * 
+	 */
+	private static class RegionDo {
+
+		private final String dataKey;
+
+		private final String selectionKey;
+
+		private final String url;
+
+		private final String crestDrawableName;
+
+		public RegionDo(String dataKey, String selectionKey, String url,
+				String crestDrawableName) {
+			this.dataKey = dataKey;
+			this.selectionKey = selectionKey;
+			this.url = url;
+			this.crestDrawableName = crestDrawableName;
+		}
+
+		public String getDataKey() {
+			return dataKey;
+		}
+
+		public String getSelectionKey() {
+			return selectionKey;
+		}
+
+		public String getUrl() {
+			return url;
+		}
+
+		public String getCrestDrawableName() {
+			return crestDrawableName;
+		}
 	}
 
 	/**
