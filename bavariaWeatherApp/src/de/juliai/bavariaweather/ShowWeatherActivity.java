@@ -29,6 +29,8 @@ import de.juliai.bavariaweather.WeatherSettingsActivity.CheckboxPreferenceData;
  */
 public class ShowWeatherActivity extends FragmentActivity {
 
+	// TODO add ordering for regions
+
 	private int numberOfRegions;
 
 	private SharedPreferences sharedPrefs;
@@ -314,6 +316,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 			}
 		}
 
+		// TODO something is still wrong about this
 		regionsPageAdapter.updateData(regionFragments);
 		regionsPageAdapter.notifyDataSetChanged();
 
