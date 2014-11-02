@@ -12,21 +12,12 @@
     <string name="dropdown_about">Über diese App</string>
     
     <string name="setting_category_selection">Regionenauswahl</string>
-    <string name="setting_category_selection_bavaria">Bayern</string>
-    <string name="setting_category_selection_swabia">Schwaben</string>
-    <string name="setting_category_selection_upperBavaria">Oberbayern</string>
-    <string name="setting_category_selection_lowerBavaria">Niederbayern</string>
-    <string name="setting_category_selection_upperPalatinate">Oberpfalz</string>
-    <string name="setting_category_selection_middleFranconia">Mittelfranken</string>
-    <string name="setting_category_selection_upperFranconia">Oberfranken</string>
-    <string name="setting_category_selection_lowerFranconia">Unterfranken</string>
-    <string name="setting_category_selection_mountainWeather">Bergwetter</string>
-    <string name="setting_category_selection_winterWeather">Wintersport-Bericht</string>
     
     <string name="text_about_version">Bayernwetter Version 2.0</string>
     <string name="text_about_me">Diese App wurde erstellt von Julia Ilnseher.\n
         Kontakt: julia.ilnseher@gmx.de</string>
-    <string name="text_about_data">Die Wetterdaten, die in dieser App angezeigt werden, stammen von der Webseite des Bayrischen Rundfunks:\n http://www.br.de/wetter/action/bayernwetter/bayern.do \n\n 
+    <string name="text_about_data">Die Wetterdaten, die in dieser App angezeigt werden, 
+        stammen von der Webseite des Bayrischen Rundfunks:\n http://www.br.de/wetter/action/bayernwetter/bayern.do \n\n 
         Das heißt, alle Rechte an diesen Daten liegen beim BR.</string>
     
 </resources>

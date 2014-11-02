@@ -1,60 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         android:key="weatherSetting_selection"
         android:title="@string/setting_category_selection" >
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="weatherSetting_sel_bavaria"
-            android:title="@string/setting_category_selection_bavaria" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="weatherSetting_sel_swabia"
-            android:title="@string/setting_category_selection_swabia" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="weatherSetting_sel_upperBavaria"
-            android:title="@string/setting_category_selection_upperBavaria" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="weatherSetting_sel_lowerBavaria"
-            android:title="@string/setting_category_selection_lowerBavaria" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="weatherSetting_sel_upperPalatinate"
-            android:title="@string/setting_category_selection_upperPalatinate" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="weatherSetting_sel_middleFranconia"
-            android:title="@string/setting_category_selection_middleFranconia" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="weatherSetting_sel_upperFranconia"
-            android:title="@string/setting_category_selection_upperFranconia" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="weatherSetting_sel_lowerFranconia"
-            android:title="@string/setting_category_selection_lowerFranconia" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="weatherSetting_sel_mountainWeather"
-            android:title="@string/setting_category_selection_mountainWeather" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="weatherSetting_sel_winterWeather"
-            android:title="@string/setting_category_selection_winterWeather" />
 
     </PreferenceCategory>
 

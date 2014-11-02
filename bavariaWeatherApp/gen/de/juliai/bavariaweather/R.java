@@ -42,8 +42,13 @@ public final class R {
         public static final int ic_launcher_old=0x7f020002;
         public static final int keep=0x7f020003;
         public static final int wappenbayern=0x7f020004;
-        public static final int wappenoberbayern=0x7f020005;
-        public static final int wappenschwaben=0x7f020006;
+        public static final int wappenmittelfranken=0x7f020005;
+        public static final int wappenniederbayern=0x7f020006;
+        public static final int wappenoberbayern=0x7f020007;
+        public static final int wappenoberfranken=0x7f020008;
+        public static final int wappenoberpfalz=0x7f020009;
+        public static final int wappenschwaben=0x7f02000a;
+        public static final int wappenunterfranken=0x7f02000b;
     }
     public static final class id {
         public static final int aboutdata=0x7f080003;
@@ -80,19 +85,9 @@ public final class R {
         public static final int dropdown_settings=0x7f050005;
         public static final int menu_item_refresh=0x7f050004;
         public static final int setting_category_selection=0x7f050008;
-        public static final int setting_category_selection_bavaria=0x7f050009;
-        public static final int setting_category_selection_lowerBavaria=0x7f05000c;
-        public static final int setting_category_selection_lowerFranconia=0x7f050010;
-        public static final int setting_category_selection_middleFranconia=0x7f05000e;
-        public static final int setting_category_selection_mountainWeather=0x7f050011;
-        public static final int setting_category_selection_swabia=0x7f05000a;
-        public static final int setting_category_selection_upperBavaria=0x7f05000b;
-        public static final int setting_category_selection_upperFranconia=0x7f05000f;
-        public static final int setting_category_selection_upperPalatinate=0x7f05000d;
-        public static final int setting_category_selection_winterWeather=0x7f050012;
-        public static final int text_about_data=0x7f050015;
-        public static final int text_about_me=0x7f050014;
-        public static final int text_about_version=0x7f050013;
+        public static final int text_about_data=0x7f05000b;
+        public static final int text_about_me=0x7f05000a;
+        public static final int text_about_version=0x7f050009;
         public static final int title_activity_about=0x7f050003;
         public static final int title_activity_settings=0x7f050002;
         public static final int title_activity_show_weather=0x7f050001;

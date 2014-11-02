@@ -55,7 +55,7 @@ public class RegionFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.serializedWeatherData = getArguments().getString(ARG_DATA);
+		this.serializedWeatherData =getArguments().getString(ARG_DATA) ;
 	}
 
 	/**
@@ -147,15 +147,24 @@ public class RegionFragment extends Fragment {
 		textSubtitle1.setPadding(PAD_LEFT, 0, PAD_RIGHT, 0);
 		textSubtitle1.setText(weatherData.getSubtitle1());
 
+		final String subtitle2 = weatherData.getSubtitle2();
+		final boolean subtitle2Exists = StringUtils.isNotEmpty(subtitle2);
+
+		int paddingBottom = 0;
+		if (!subtitle2Exists) {
+			paddingBottom = PAD_BOTTOM_TEXT;
+		}
 		final TextView textTimestamp = (TextView) view
 				.findViewById(R.id.timestamp);
 		textTimestamp.setPadding(PAD_LEFT, 0, PAD_RIGHT, 0);
 		textTimestamp.setText(weatherData.getTimestamp());
 
-		final TextView textSubtitle2 = (TextView) view
-				.findViewById(R.id.subtitle2);
-		textSubtitle2.setPadding(PAD_LEFT, 0, PAD_RIGHT, PAD_BOTTOM_TEXT);
-		textSubtitle2.setText(weatherData.getSubtitle2());
+		if (subtitle2Exists) {
+			final TextView textSubtitle2 = (TextView) view
+					.findViewById(R.id.subtitle2);
+			textSubtitle2.setPadding(PAD_LEFT, 0, PAD_RIGHT, PAD_BOTTOM_TEXT);
+			textSubtitle2.setText(subtitle2);
+		}
 
 		// dynamic texts
 		if (weatherData.getWeatherTexts() != null) {

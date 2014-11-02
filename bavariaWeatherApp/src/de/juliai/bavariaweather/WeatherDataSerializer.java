@@ -30,7 +30,12 @@ public class WeatherDataSerializer {
 					weatherData.getCrestDrawableName());
 			weatherDataJson.put("title", weatherData.getTitle());
 			weatherDataJson.put("subtitle1", weatherData.getSubtitle1());
-			weatherDataJson.put("subtitle2", weatherData.getSubtitle2());
+
+			final String subtitle2 = weatherData.getSubtitle2();
+			if (StringUtils.isNotEmpty(subtitle2)) {
+				weatherDataJson.put("subtitle2", subtitle2);
+			}
+
 			weatherDataJson.put("timestamp", weatherData.getTimestamp());
 
 			final JSONArray weatherTextsArray = new JSONArray();
@@ -76,7 +81,14 @@ public class WeatherDataSerializer {
 					.getString("crestDrawableName"));
 			weatherData.setTitle(weatherDataJson.getString("title"));
 			weatherData.setSubtitle1(weatherDataJson.getString("subtitle1"));
-			weatherData.setSubtitle2(weatherDataJson.getString("subtitle2"));
+
+			try {
+				weatherData
+						.setSubtitle2(weatherDataJson.getString("subtitle2"));
+			} catch (JSONException e) {
+				// do nothing, that's fine
+			}
+
 			weatherData.setTimestamp(weatherDataJson.getString("timestamp"));
 
 			final JSONArray weatherTextsArray = weatherDataJson

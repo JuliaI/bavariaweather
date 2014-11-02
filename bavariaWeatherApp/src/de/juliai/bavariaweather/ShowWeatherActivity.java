@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import de.juliai.bavariaweather.AsyncTaskCounter.AsyncTaskCounterCallback;
+import de.juliai.bavariaweather.WeatherSettingsActivity.CheckboxPreferenceData;
 
 /**
  * 
@@ -28,12 +29,6 @@ import de.juliai.bavariaweather.AsyncTaskCounter.AsyncTaskCounterCallback;
  */
 public class ShowWeatherActivity extends FragmentActivity {
 
-	/*
-	 * TODO: 
-	 * - wappen 
-	 * - create settings page from do-data 
-	 * - add order forregions
-	 */
 	private int numberOfRegions;
 
 	private SharedPreferences sharedPrefs;
@@ -49,6 +44,8 @@ public class ShowWeatherActivity extends FragmentActivity {
 	private List<String> dataKeys;
 
 	private List<String> selectionKeys;
+
+	private List<CheckboxPreferenceData> checkboxPreferenceDatas;
 
 	/**
 	 * {@inheritDoc}
@@ -109,7 +106,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 
 		// check version
 		final String KEY_VERSION = "bavariaWeatherVersion";
-		final String CURRENT_VERSION = "1.6";
+		final String CURRENT_VERSION = "2";
 
 		boolean deleteData;
 		final String version = sharedPrefs.getString(KEY_VERSION, "");
@@ -124,79 +121,81 @@ public class ShowWeatherActivity extends FragmentActivity {
 		}
 
 		// init regions
-		/*
-		 * if you update something here, also update weather_settings.xml and
-		 * strings.xml !
-		 */
 		final List<RegionDo> regionDos = new LinkedList<RegionDo>();
 
 		final RegionDo bavaria = new RegionDo("weatherData_bavaria",
-				"weatherSetting_sel_bavaria",
 				"http://www.br.de/wetter/action/bayernwetter/bayern.do",
-				"@drawable/wappenbayern");
+				"@drawable/wappenbayern", "weatherSetting_sel_bavaria", true,
+				"Bayern");
 		regionDos.add(bavaria);
+
+		final RegionDo bavariaTrend = new RegionDo("weatherData_bavariaTrend",
+				"http://www.br.de/wetter/action/bayernwetter/siebentage.do",
+				"@drawable/wappenbayern", "weatherSetting_sel_bavariaTrend",
+				false, "Wettertrend für Bayern");
+		regionDos.add(bavariaTrend);
 
 		final RegionDo swabia = new RegionDo(
 				"weatherData_swabia",
-				"weatherSetting_sel_swabia",
 				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Schwaben",
-				"@drawable/wappenschwaben");
+				"@drawable/wappenschwaben", "weatherSetting_sel_swabia", false,
+				"Schwaben");
 		regionDos.add(swabia);
 
 		final RegionDo upperBavaria = new RegionDo(
 				"weatherData_upperBavaria",
-				"weatherSetting_sel_upperBavaria",
 				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Oberbayern",
-				"@drawable/wappenoberbayern");
+				"@drawable/wappenoberbayern",
+				"weatherSetting_sel_upperBavaria", false, "Oberbayern");
 		regionDos.add(upperBavaria);
 
 		final RegionDo lowerBavaria = new RegionDo(
 				"weatherData_lowerBavaria",
-				"weatherSetting_sel_lowerBavaria",
 				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Niederbayern",
-				"@drawable/wappenniederbayern");
+				"@drawable/wappenniederbayern",
+				"weatherSetting_sel_lowerBavaria", false, "Niederbayern");
 		regionDos.add(lowerBavaria);
 
 		final RegionDo upperPalatinate = new RegionDo(
 				"weatherData_upperPalatinate",
-				"weatherSetting_sel_upperPalatinate",
 				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Oberpfalz",
-				"@drawable/wappenoberpfalz");
+				"@drawable/wappenoberpfalz",
+				"weatherSetting_sel_upperPalatinate", false, "Oberpfalz");
 		regionDos.add(upperPalatinate);
 
 		final RegionDo middleFranconia = new RegionDo(
 				"weatherData_middleFranconia",
-				"weatherSetting_sel_middleFranconia",
 				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Mittelfranken",
-				"@drawable/wappenmittelfranken");
+				"@drawable/wappenmittelfranken",
+				"weatherSetting_sel_middleFranconia", false, "Mittelfranken");
 		regionDos.add(middleFranconia);
 
 		final RegionDo upperFranconia = new RegionDo(
 				"weatherData_upperFranconia",
-				"weatherSetting_sel_upperFranconia",
 				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Oberfranken",
-				"@drawable/wappenoberfranken");
+				"@drawable/wappenoberfranken",
+				"weatherSetting_sel_upperFranconia", false, "Oberfranken");
 		regionDos.add(upperFranconia);
 
 		final RegionDo lowerFranconia = new RegionDo(
 				"weatherData_lowerFranconia",
-				"weatherSetting_sel_lowerFranconia",
 				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Unterfranken",
-				"@drawable/wappenunterfranken");
+				"@drawable/wappenunterfranken",
+				"weatherSetting_sel_lowerFranconia", false, "Unterfranken");
 		regionDos.add(lowerFranconia);
 
 		final RegionDo mountainWeather = new RegionDo(
 				"weatherData_mountainWeather",
-				"weatherSetting_sel_mountainWeather",
 				"http://www.br.de/wetter/action/reisewetter/bergwetter.do",
-				"@drawable/wappenbergwetter");
+				"@drawable/wappenbayern", "weatherSetting_sel_mountainWeather",
+				false, "Bergwetter");
 		regionDos.add(mountainWeather);
 
 		final RegionDo winterWeather = new RegionDo(
 				"weatherData_winterWeather",
-				"weatherSetting_sel_winterWeather",
 				"http://www.br.de/wetter/action/reisewetter/wintersport.do",
-				"@drawable/wappenwinterwetter");
+				"@drawable/wappenbayern", "weatherSetting_sel_winterWeather",
+				false, "Wintersport-Bericht");
 		regionDos.add(winterWeather);
 
 		numberOfRegions = regionDos.size();
@@ -205,6 +204,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 		regionFragments = new ArrayList<RegionFragment>(numberOfRegions);
 		dataKeys = new LinkedList<String>();
 		selectionKeys = new LinkedList<String>();
+		checkboxPreferenceDatas = new ArrayList<CheckboxPreferenceData>();
 
 		for (final RegionDo regionDo : regionDos) {
 			dataKeys.add(regionDo.getDataKey());
@@ -228,6 +228,10 @@ public class ShowWeatherActivity extends FragmentActivity {
 			regions.add(new Region(selection, regionDo.getSelectionKey(),
 					regionDo.getUrl(), regionDo.getDataKey(), regionDo
 							.getCrestDrawableName(), fragment));
+
+			checkboxPreferenceDatas.add(new CheckboxPreferenceData(regionDo
+					.getSelectionKey(), regionDo.getSettingsTitle(), regionDo
+					.isDefaultActive()));
 		}
 	}
 
@@ -281,6 +285,9 @@ public class ShowWeatherActivity extends FragmentActivity {
 	private void showWeatherSettings() {
 		final Intent intent = new Intent();
 		intent.setClass(ShowWeatherActivity.this, WeatherSettingsActivity.class);
+		intent.putExtra(WeatherSettingsActivity.KEY_INTENT_EXTRAS,
+				new WeatherSettingsActivity.IntentExtras(
+						checkboxPreferenceDatas));
 		startActivityForResult(intent, 0);
 	}
 
@@ -349,26 +356,28 @@ public class ShowWeatherActivity extends FragmentActivity {
 
 		private final String dataKey;
 
-		private final String selectionKey;
-
 		private final String url;
 
 		private final String crestDrawableName;
 
-		public RegionDo(String dataKey, String selectionKey, String url,
-				String crestDrawableName) {
+		private final String selectionKey;
+
+		private final boolean defaultActive;
+
+		private final String settingsTitle;
+
+		public RegionDo(String dataKey, String url, String crestDrawableName,
+				String selectionKey, boolean defaultActive, String settingsTitle) {
 			this.dataKey = dataKey;
-			this.selectionKey = selectionKey;
 			this.url = url;
 			this.crestDrawableName = crestDrawableName;
+			this.selectionKey = selectionKey;
+			this.defaultActive = defaultActive;
+			this.settingsTitle = settingsTitle;
 		}
 
 		public String getDataKey() {
 			return dataKey;
-		}
-
-		public String getSelectionKey() {
-			return selectionKey;
 		}
 
 		public String getUrl() {
@@ -377,6 +386,18 @@ public class ShowWeatherActivity extends FragmentActivity {
 
 		public String getCrestDrawableName() {
 			return crestDrawableName;
+		}
+
+		public String getSelectionKey() {
+			return selectionKey;
+		}
+
+		public boolean isDefaultActive() {
+			return defaultActive;
+		}
+
+		public String getSettingsTitle() {
+			return settingsTitle;
 		}
 	}
 
