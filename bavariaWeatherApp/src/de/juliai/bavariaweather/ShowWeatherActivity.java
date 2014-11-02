@@ -28,11 +28,19 @@ import de.juliai.bavariaweather.AsyncTaskCounter.AsyncTaskCounterCallback;
  */
 public class ShowWeatherActivity extends FragmentActivity {
 
+	/*
+	 * TODO: 
+	 * - wappen 
+	 * - create settings page from do-data 
+	 * - add order forregions
+	 */
 	private int numberOfRegions;
 
 	private SharedPreferences sharedPrefs;
 
 	private RegionsPageAdapter regionsPageAdapter;
+
+	private Menu menu;
 
 	private List<Region> regions;
 
@@ -67,6 +75,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.show_weather_menu, menu);
+		this.menu = menu;
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -86,8 +95,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 			deleteCache();
 			return true;
 		case R.id.dropdown_about:
-			Toast.makeText(this, "clicked menu about item!", Toast.LENGTH_SHORT)
-					.show();
+			showAbout();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -101,7 +109,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 
 		// check version
 		final String KEY_VERSION = "bavariaWeatherVersion";
-		final String CURRENT_VERSION = "1.5";
+		final String CURRENT_VERSION = "1.6";
 
 		boolean deleteData;
 		final String version = sharedPrefs.getString(KEY_VERSION, "");
@@ -224,15 +232,21 @@ public class ShowWeatherActivity extends FragmentActivity {
 	}
 
 	/**
+	 * 
+	 */
+	private void reloadWeatherInfo() {
+		final MenuItem item = menu.findItem(R.id.itemRefresh);
+		reloadWeatherInfo(item);
+	}
+
+	/**
 	 * loads the weather-data from the internet and stores it in the shared
 	 * preferences.
 	 */
 	private void reloadWeatherInfo(final MenuItem item) {
-		if (item != null) {
-			// start refresh-icon-spinner
-			item.setActionView(R.layout.action_progressbar);
-			item.expandActionView();
-		}
+		// start refresh-icon-spinner
+		item.setActionView(R.layout.action_progressbar);
+		item.expandActionView();
 
 		int numberOfActiveRegions = 0;
 		for (final Region region : regions) {
@@ -245,11 +259,9 @@ public class ShowWeatherActivity extends FragmentActivity {
 				numberOfActiveRegions, new AsyncTaskCounterCallback() {
 					@Override
 					public void onFinishedAllTasks() {
-						if (item != null) {
-							// stop refresh-icon-spinner
-							item.collapseActionView();
-							item.setActionView(null);
-						}
+						// stop refresh-icon-spinner
+						item.collapseActionView();
+						item.setActionView(null);
 					}
 				});
 
@@ -298,7 +310,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 		regionsPageAdapter.updateData(regionFragments);
 		regionsPageAdapter.notifyDataSetChanged();
 
-		reloadWeatherInfo(null);
+		reloadWeatherInfo();
 	}
 
 	/**
@@ -310,6 +322,22 @@ public class ShowWeatherActivity extends FragmentActivity {
 			prefsEditor.remove(dataKey);
 		}
 		prefsEditor.commit();
+
+		for (final Region region : regions) {
+			region.changeWeatherData("");
+		}
+
+		Toast.makeText(this, "Der Cache wurde gelöscht", Toast.LENGTH_LONG)
+				.show();
+	}
+
+	/**
+	 * shows the about-activity
+	 */
+	private void showAbout() {
+		final Intent intent = new Intent();
+		intent.setClass(ShowWeatherActivity.this, AboutActivity.class);
+		startActivity(intent);
 	}
 
 	/**
