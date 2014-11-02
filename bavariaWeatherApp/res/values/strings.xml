@@ -14,5 +14,12 @@
     <string name="setting_category_selection_bavaria">Bayern</string>
     <string name="setting_category_selection_swabia">Schwaben</string>
     <string name="setting_category_selection_upperBavaria">Oberbayern</string>
+    <string name="setting_category_selection_lowerBavaria">Niederbayern</string>
+    <string name="setting_category_selection_upperPalatinate">Oberpfalz</string>
+    <string name="setting_category_selection_middleFranconia">Mittelfranken</string>
+    <string name="setting_category_selection_upperFranconia">Oberfranken</string>
+    <string name="setting_category_selection_lowerFranconia">Unterfranken</string>
+    <string name="setting_category_selection_mountainWeather">Bergwetter</string>
+    <string name="setting_category_selection_winterWeather">Wintersport-Bericht</string>
 
 </resources>

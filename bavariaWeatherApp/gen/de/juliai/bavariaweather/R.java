@@ -77,8 +77,15 @@ public final class R {
         public static final int menu_item_refresh=0x7f050003;
         public static final int setting_category_selection=0x7f050007;
         public static final int setting_category_selection_bavaria=0x7f050008;
+        public static final int setting_category_selection_lowerBavaria=0x7f05000b;
+        public static final int setting_category_selection_lowerFranconia=0x7f05000f;
+        public static final int setting_category_selection_middleFranconia=0x7f05000d;
+        public static final int setting_category_selection_mountainWeather=0x7f050010;
         public static final int setting_category_selection_swabia=0x7f050009;
         public static final int setting_category_selection_upperBavaria=0x7f05000a;
+        public static final int setting_category_selection_upperFranconia=0x7f05000e;
+        public static final int setting_category_selection_upperPalatinate=0x7f05000c;
+        public static final int setting_category_selection_winterWeather=0x7f050011;
         public static final int title_activity_settings=0x7f050002;
         public static final int title_activity_show_weather=0x7f050001;
     }

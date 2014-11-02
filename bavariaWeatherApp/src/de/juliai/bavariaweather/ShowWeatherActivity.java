@@ -28,7 +28,7 @@ import de.juliai.bavariaweather.AsyncTaskCounter.AsyncTaskCounterCallback;
  */
 public class ShowWeatherActivity extends FragmentActivity {
 
-	private static final int NUMBER_OF_REGIONS = 3;
+	private int numberOfRegions;
 
 	private SharedPreferences sharedPrefs;
 
@@ -117,9 +117,8 @@ public class ShowWeatherActivity extends FragmentActivity {
 
 		// init regions
 		/*
-		 * if you update something here, also update 
-		 * - int NUMBER_OF_REGIONS 
-		 * - weather_settings.xml
+		 * if you update something here, also update weather_settings.xml and
+		 * strings.xml !
 		 */
 		final List<RegionDo> regionDos = new LinkedList<RegionDo>();
 
@@ -132,19 +131,70 @@ public class ShowWeatherActivity extends FragmentActivity {
 		final RegionDo swabia = new RegionDo(
 				"weatherData_swabia",
 				"weatherSetting_sel_swabia",
-				"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Schwaben&id=0",
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Schwaben",
 				"@drawable/wappenschwaben");
 		regionDos.add(swabia);
 
 		final RegionDo upperBavaria = new RegionDo(
 				"weatherData_upperBavaria",
 				"weatherSetting_sel_upperBavaria",
-				"http://www.br.de/wetter/action/bayernwetter/bayern.do?regio=Oberbayern&id=0",
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Oberbayern",
 				"@drawable/wappenoberbayern");
 		regionDos.add(upperBavaria);
 
-		regions = new LinkedList<Region>();
-		regionFragments = new ArrayList<RegionFragment>(NUMBER_OF_REGIONS);
+		final RegionDo lowerBavaria = new RegionDo(
+				"weatherData_lowerBavaria",
+				"weatherSetting_sel_lowerBavaria",
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Niederbayern",
+				"@drawable/wappenniederbayern");
+		regionDos.add(lowerBavaria);
+
+		final RegionDo upperPalatinate = new RegionDo(
+				"weatherData_upperPalatinate",
+				"weatherSetting_sel_upperPalatinate",
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Oberpfalz",
+				"@drawable/wappenoberpfalz");
+		regionDos.add(upperPalatinate);
+
+		final RegionDo middleFranconia = new RegionDo(
+				"weatherData_middleFranconia",
+				"weatherSetting_sel_middleFranconia",
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Mittelfranken",
+				"@drawable/wappenmittelfranken");
+		regionDos.add(middleFranconia);
+
+		final RegionDo upperFranconia = new RegionDo(
+				"weatherData_upperFranconia",
+				"weatherSetting_sel_upperFranconia",
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Oberfranken",
+				"@drawable/wappenoberfranken");
+		regionDos.add(upperFranconia);
+
+		final RegionDo lowerFranconia = new RegionDo(
+				"weatherData_lowerFranconia",
+				"weatherSetting_sel_lowerFranconia",
+				"http://www.br.de/wetter/action/bayernwetter/bayern.do?id=0&regio=Unterfranken",
+				"@drawable/wappenunterfranken");
+		regionDos.add(lowerFranconia);
+
+		final RegionDo mountainWeather = new RegionDo(
+				"weatherData_mountainWeather",
+				"weatherSetting_sel_mountainWeather",
+				"http://www.br.de/wetter/action/reisewetter/bergwetter.do",
+				"@drawable/wappenbergwetter");
+		regionDos.add(mountainWeather);
+
+		final RegionDo winterWeather = new RegionDo(
+				"weatherData_winterWeather",
+				"weatherSetting_sel_winterWeather",
+				"http://www.br.de/wetter/action/reisewetter/wintersport.do",
+				"@drawable/wappenwinterwetter");
+		regionDos.add(winterWeather);
+
+		numberOfRegions = regionDos.size();
+
+		regions = new ArrayList<Region>(numberOfRegions);
+		regionFragments = new ArrayList<RegionFragment>(numberOfRegions);
 		dataKeys = new LinkedList<String>();
 		selectionKeys = new LinkedList<String>();
 
@@ -228,7 +278,7 @@ public class ShowWeatherActivity extends FragmentActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// after user closed the settings:
-		regionFragments = new ArrayList<RegionFragment>(NUMBER_OF_REGIONS);
+		regionFragments = new ArrayList<RegionFragment>(numberOfRegions);
 
 		for (final String selectionKey : selectionKeys) {
 			final boolean selection = sharedPrefs.getBoolean(selectionKey,
