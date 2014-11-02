@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:key="weatherSetting_selection"
+        android:title="@string/setting_category_selection" >
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="weatherSetting_sel_bavaria"
+            android:title="@string/setting_category_selection_bavaria" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="weatherSetting_sel_swabia"
+            android:title="@string/setting_category_selection_swabia" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="weatherSetting_sel_upperBavaria"
+            android:title="@string/setting_category_selection_upperBavaria" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

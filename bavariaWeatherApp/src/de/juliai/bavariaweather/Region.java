@@ -7,24 +7,47 @@ package de.juliai.bavariaweather;
  */
 public class Region {
 
+	private boolean active;
+
+	private String preferencesKeySelection;
+
 	private String url;
 
-	private String preferencesKey;
+	private String preferencesKeyData;
 
 	private String crestDrawableName;
 
 	private RegionFragment fragment;
 
-	public Region(final String url, final String preferencesKey,
+	public Region(final boolean active, final String preferencesKeySelection,
+			final String url, final String preferencesKeyData,
 			final String crestDrawableName, final RegionFragment fragment) {
+		this.active = active;
+		this.preferencesKeySelection = preferencesKeySelection;
 		this.url = url;
-		this.preferencesKey = preferencesKey;
+		this.preferencesKeyData = preferencesKeyData;
 		this.crestDrawableName = crestDrawableName;
 		this.fragment = fragment;
 	}
 
 	public void changeWeatherData(final String newSerializedWeatherData) {
 		this.fragment.changeWeatherData(newSerializedWeatherData);
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public String getPreferencesKeySelection() {
+		return preferencesKeySelection;
+	}
+
+	public void setPreferencesKeySelection(String preferencesKeySelection) {
+		this.preferencesKeySelection = preferencesKeySelection;
 	}
 
 	public String getUrl() {
@@ -35,12 +58,12 @@ public class Region {
 		this.url = url;
 	}
 
-	public String getPreferencesKey() {
-		return preferencesKey;
+	public String getPreferencesKeyData() {
+		return preferencesKeyData;
 	}
 
-	public void setPreferencesKey(String preferencesKey) {
-		this.preferencesKey = preferencesKey;
+	public void setPreferencesKeyData(String preferencesKeyData) {
+		this.preferencesKeyData = preferencesKeyData;
 	}
 
 	public String getCrestDrawableName() {

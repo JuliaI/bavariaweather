@@ -149,7 +149,7 @@ public class DownloadWeatherDataAsyncTask extends
 					.serialize(weatherData);
 
 			final Editor prefsEditor = sharedPrefs.edit();
-			prefsEditor.putString(region.getPreferencesKey(),
+			prefsEditor.putString(region.getPreferencesKeyData(),
 					serializedWeatherData);
 			prefsEditor.commit();
 
@@ -161,7 +161,7 @@ public class DownloadWeatherDataAsyncTask extends
 		final String errorMessage = result.getErrorMessage();
 		if (StringUtils.isNotEmpty(errorMessage)) {
 			Toast.makeText(thisActivity,
-					region.getPreferencesKey() + ": " + errorMessage,
+					region.getPreferencesKeyData() + ": " + errorMessage,
 					Toast.LENGTH_LONG).show();
 		}
 
